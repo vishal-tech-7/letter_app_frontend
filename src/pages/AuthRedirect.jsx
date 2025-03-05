@@ -5,20 +5,20 @@ const AuthRedirect = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Extract token from URL
+    // Extract token from the URL query params
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get("token");
 
     if (token) {
-      // Store the token in localStorage
+      // Save the token to localStorage
       localStorage.setItem("authToken", token);
-      console.log("✅ Token saved in localStorage:", token);
+      console.log("✅ Token saved to localStorage:", token);
 
-      // Redirect to dashboard
-      navigate("/dashboard"); 
+      // Redirect to the dashboard after saving the token
+      navigate("/dashboard");
     } else {
       console.error("❌ No token found in URL.");
-      navigate("/"); // If no token, redirect to home or login
+      navigate("/login"); // Redirect to login if no token is found
     }
   }, [navigate]);
 
@@ -26,3 +26,5 @@ const AuthRedirect = () => {
 };
 
 export default AuthRedirect;
+
+

@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const API_BASE_URL = "https://letter-app-new.onrender.com/auth";
+const API_BASE_URL = `${import.meta.env.VITE_API_URL}/auth`;
+
 
 export const loginWithGoogle = async () => {
     try {

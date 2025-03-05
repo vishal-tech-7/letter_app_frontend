@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const API_BASE_URL = "https://letter-app-new.onrender.com/drive"; // ✅ Ensure this matches backend
+const API_BASE_URL = `${import.meta.env.VITE_API_URL}/drive`;
+ // ✅ Ensure this matches backend
 
 export const listLetters = async () => {
   const token = localStorage.getItem("token"); // ✅ Fetch token

@@ -22,20 +22,28 @@ export const loginWithGoogle = async () => {
 
 
 
-export const getUserProfile = async (token) => {
-  if (!token) {
-    console.error("❌ No token provided for API request.");
-    return null;
-  }
-
-  try {
-    const response = await axios.get(`${API_BASE_URL}/profile`, {
-      headers: { Authorization: `Bearer ${token}` }, // ✅ Ensure token is sent
-    });
-    return response.data;
-  } catch (error) {
-    console.error("Failed to fetch user profile:", error);
-    return null;
-  }
-};
+  export const getUserProfile = async () => {
+    const token = localStorage.getItem("authToken"); // ✅ Get token from storage
+  
+    if (!token) {
+      console.error("❌ No token found, user may not be logged in.");
+      return null;
+    }
+  
+    try {
+      console.log("🔄 Fetching user profile with token:", token);
+  
+      const response = await axios.get(`${API_BASE_URL}/profile`, {
+        headers: { Authorization: `Bearer ${token}` }, // ✅ Ensure token is sent
+      });
+  
+      console.log("✅ User profile fetched:", response.data);
+      return response.data;
+  
+    } catch (error) {
+      console.error("❌ Failed to fetch user profile:", error.response ? error.response.data : error);
+      return null;
+    }
+  };
+  
 

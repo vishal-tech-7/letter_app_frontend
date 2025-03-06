@@ -3,22 +3,22 @@ import { AuthProvider } from "./context/AuthContext";
 import { useEffect } from "react";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
-import Dashboard from "./pages/Dashboard";
 import EditorPage from "./pages/EditorPage";
-import AuthRedirect from "./pages/AuthRedirect";
 import TokenHandler from "./components/TokenHandler";
 
 function App() {
-  // Add this effect to catch tokens in the URL from any path
+  // Global token capture for any initial URL
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get("token");
     
     if (token) {
-      console.log("Token found in URL on app load");
+      console.log("Initial token detected");
       localStorage.setItem("authToken", token);
-      // Optional: remove token from URL for security
-      window.history.replaceState({}, document.title, window.location.pathname);
+      
+      // Clean URL and redirect to editor
+      window.history.replaceState({}, document.title, "/editor");
+      window.location.reload(); // Force React to recognize new route
     }
   }, []);
 
@@ -27,12 +27,31 @@ function App() {
       <Router>
         <Navbar />
         <Routes>
+          {/* Main Pages */}
           <Route path="/" element={<Home />} />
-          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/editor" element={<EditorPage />} />
-          <Route path="/auth-redirect" element={<AuthRedirect />} />
-          {/* Add these routes to catch the token */}
-          <Route path="/index.html" element={<TokenHandler />} />
+
+          {/* Auth Handling Routes */}
+          <Route 
+            path="/auth-redirect" 
+            element={
+              <TokenHandler 
+                onSuccess="/editor" 
+                onFailure="/" 
+              />
+            } 
+          />
+          
+          {/* Fallback for legacy/email links */}
+          <Route 
+            path="/index.html" 
+            element={
+              <TokenHandler 
+                onSuccess="/editor" 
+                onFailure="/" 
+              />
+            } 
+          />
         </Routes>
       </Router>
     </AuthProvider>

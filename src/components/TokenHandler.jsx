@@ -1,37 +1,38 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-const TokenHandler = () => {
+const TokenHandler = ({ onSuccess = "/editor", onFailure = "/" }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    try {
-      const urlParams = new URLSearchParams(window.location.search);
-      const token = urlParams.get("token");
-      
-      console.log("TokenHandler checking for token...");
-      
-      if (token) {
-        // Set token in localStorage
-        localStorage.setItem("authToken", token);
-        
-        // Verify it was saved
-        const savedToken = localStorage.getItem("authToken");
-        console.log("Token saved successfully:", !!savedToken);
-        
-        // Navigate to dashboard
-        navigate("/dashboard", { replace: true });
-      } else {
-        console.error("No token found in URL parameters");
-        navigate("/login", { replace: true });
-      }
-    } catch (error) {
-      console.error("Error in TokenHandler:", error);
-      navigate("/login", { replace: true });
-    }
-  }, [navigate]);
+    const processToken = () => {
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get("token");
 
-  return <div>Processing authentication...</div>;
+        if (token) {
+          localStorage.setItem("authToken", token);
+          console.log("Token stored successfully");
+          navigate(onSuccess, { replace: true });
+        } else {
+          console.warn("No token found in URL");
+          navigate(onFailure, { replace: true });
+        }
+      } catch (error) {
+        console.error("Token processing error:", error);
+        navigate(onFailure, { replace: true });
+      }
+    };
+
+    processToken();
+  }, [navigate, onSuccess, onFailure]);
+
+  return (
+    <div className="auth-processing">
+      <h2>Authenticating...</h2>
+      <p>Please wait while we verify your credentials</p>
+    </div>
+  );
 };
 
 export default TokenHandler;

@@ -15,7 +15,8 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/editor" element={<EditorPage />} />
-          <Route path="/auth/success" element={<AuthRedirect />} />
+          {/* Change this route path to match your auth redirect URL */}
+          <Route path="/auth-redirect" element={<AuthRedirect />} />
         </Routes>
       </Router>
     </AuthProvider>
